@@ -2,23 +2,25 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class HoneyBeeFarmer {
-    private String firstName;
-    private String lastName;
-    private PhoneNumber telephoneNumber;
-    private String id;
-    private ArrayList<Apiary> apiaries;
-    private Integer apiaryCount;
-    private Location location;
+    protected String firstName;
+    protected String lastName;
+    protected PhoneNumber telephoneNumber;
+    protected String id;
+    protected ArrayList<Apiary> apiaries;
+    protected Integer apiaryCount;
+    protected Location location;
     protected SmsSendBehavior smsSendBehavior;
-    private SimulateHoneyBeeFarmerDB db = new SimulateHoneyBeeFarmerDB();
+    protected SimulateHoneyBeeFarmerDB db;
 
     public HoneyBeeFarmer(String telephoneNumber) {
         this.telephoneNumber = new PhoneNumber(telephoneNumber);
-        if(this.db.exists(this.telephoneNumber)) {
-            HoneyBeeFarmer profile = db.getHoneyBeeFarmer(this.telephoneNumber);
+        db = SimulateHoneyBeeFarmerDB.getInstance();
+        if(db.exists(this.telephoneNumber.toString())) {
+            HoneyBeeFarmer profile = db.getHoneyBeeFarmer(this.telephoneNumber.toString());
+            System.out.println(profile);
             this.setProperties(profile);
         } else {
-
+            setTelephoneNumber(new PhoneNumber(telephoneNumber));
         }
     }
 
@@ -29,15 +31,6 @@ public class HoneyBeeFarmer {
         this.id = id;
         this.apiaries = apiaries;
         this.location = location;
-    }
-
-    /*
-     * Save the honey bee farmer to the database.
-     * Return:
-     * - void
-     */
-    public void saveHoneyBeeFarmer(HoneyBeeFarmer hbf) {
-        db.updateHoneyBeeFarmer(hbf);
     }
 
     /*
@@ -59,13 +52,7 @@ public class HoneyBeeFarmer {
      *      - void
      */
     public void setApiaryCount(Integer count) {
-        if(count > apiaries.size()) {
-            int diff = apiaries.size() - count;
-            // add new apiaries
-            for(int i = 0; i < diff; i++) {
-                apiaries.add(new Apiary("temp" + i, new Date(System.currentTimeMillis())));
-            }
-        }
+        apiaryCount = count;
     }
 
 
@@ -128,6 +115,13 @@ public class HoneyBeeFarmer {
     }
 
     /*
+     * Add an apiary to the list of apiaries.
+     * Return:
+     *      - void.
+     */
+    public void addApiary(Apiary apiary) { this.apiaries.add(apiary); }
+
+    /*
      * Set the apiaries operated by the honey bee farmer.
      */
     public void setApiaries(ArrayList<Apiary> apiaries) {
@@ -172,7 +166,7 @@ public class HoneyBeeFarmer {
      */
     public boolean exists() {
         // Simulate the retrieval from a database.
-        return this.db.exists(this.telephoneNumber);
+        return this.db.exists(this.telephoneNumber.toString());
     }
 
     /*
@@ -180,5 +174,12 @@ public class HoneyBeeFarmer {
      */
     public boolean sendSMS(String body) {
         return this.smsSendBehavior.sendSMS(this.telephoneNumber.toString(), body);
+    }
+
+    /*
+     * @return String The honey bee farmer represented as a string
+     */
+    public String toString() {
+        return "Name: " + firstName + " " + lastName + ", PhoneNumber: " + telephoneNumber.toString() + ", Apiary Count: " + apiaryCount;
     }
 }

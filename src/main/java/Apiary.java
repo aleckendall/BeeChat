@@ -7,6 +7,7 @@ public class Apiary {
     private String name;
     private Location location;
     private ArrayList<Hive> hives;
+    private Integer hiveCount;
     private ArrayList<Visit> visits;
     private Date creationDate;
 
@@ -89,6 +90,23 @@ public class Apiary {
         return this.location;
     }
 
+    /*
+     * Get the number of hives at the apiary.
+     * Return:
+     *      - Integer: hiveCount
+     */
+    public Integer getHiveCount() {
+        return this.hiveCount;
+    }
+
+    /*
+     * Set the number of hives at the apiary.
+     * Return:
+     *      - void
+     */
+    public void setHiveCount(Integer hiveCount) {
+        this.hiveCount = hiveCount;
+    }
 
     /*
      * Set the hives ArrayList for the apiary.

@@ -1,10 +1,10 @@
 public class Location {
 
     private String country;
-    private double latitude;
-    private double longitude;
+    private Double latitude;
+    private Double longitude;
 
-    public Location(String country, double latitude, double longitude) {
+    public Location(String country, Double latitude, Double longitude) {
         this.country = country;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -19,19 +19,19 @@ public class Location {
         return this.country;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public double getLatitude() {
+    public Double getLatitude() {
         return this.latitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
-    public double getLongitude() {
+    public Double getLongitude() {
         return this.longitude;
     }
 }

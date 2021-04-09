@@ -49,7 +49,10 @@ public class TwilioSMS implements SmsSendBehavior, SmsRetrievalBehavior {
         Stack<AdapteeMessage> newMessages = new Stack<>();
         LocalDateTime convDate;
         for(Message msg : messages) {
-            newMessages.push(new AdapteeMessage(msg.getFrom().toString(), msg.getBody(), msg.getDateSent()));
+            if(msg.getDateSent().isAfter(lastReceived)) {
+                newMessages.push(new AdapteeMessage(msg.getFrom().toString(), msg.getBody(), msg.getDateSent()));
+                System.out.println(msg.getBody());
+            }
         }
 
         return newMessages;
