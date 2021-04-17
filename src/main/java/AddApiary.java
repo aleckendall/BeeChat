@@ -1,14 +1,11 @@
-import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AddApiary extends Sequence {
-    private HoneyBeeFarmer hbf;
-    private Apiary apiary;
+    private Apiary apiary = new Apiary();
 
     public AddApiary(Conversation conversation) {
         super(conversation);
-        startSequence();
     }
 
     /*
@@ -17,7 +14,8 @@ public class AddApiary extends Sequence {
      * @return void
      */
     public void startSequence() {
-        hbf.sendSMS("What is the name of your apiary? Only include the name of the apiary.");
+        conversation.getHoneyBeeFarmer().sendSMS("What is the name of your apiary? Only include the name of the apiary.\nExample: John's Apiary");
+        this.setLive(true);
     }
 
     /*
@@ -26,9 +24,8 @@ public class AddApiary extends Sequence {
      * @return void
      */
     public void endSequence() {
-        this.hbf.addApiary(apiary);
-        conversation.getDatabase().updateHoneyBeeFarmer(hbf);
-        conversation.getHoneyBeeFarmer().setProperties(hbf);
+        conversation.getDatabase().updateHoneyBeeFarmer(conversation.getHoneyBeeFarmer());
+        conversation.getHoneyBeeFarmer().setProperties(conversation.getHoneyBeeFarmer());
         exit = true;
     }
 
@@ -51,22 +48,9 @@ public class AddApiary extends Sequence {
             case 3:
                 message3();
                 break;
-            default:
-                // no more message so exit
-                exit = true;
         }
     }
 
-    /*
-     * Handle the client response.
-     *
-     * @return void
-     */
-    public void handleResponse(String response) {
-        this.setResponse(response);
-        doCurrentMsg();
-        return;
-    }
 
     /*
      * ---- Create Apiary Segment 1/1 ----
@@ -79,15 +63,20 @@ public class AddApiary extends Sequence {
      */
     public void message0() {
 
-        Pattern pattern = Pattern.compile("[.]+[\\s.]*");
-        Matcher matcher = pattern.matcher(response);
-        if(matcher.matches()) {
-            this.apiary = new Apiary(response, new Date(System.currentTimeMillis()));
-            hbf.sendSMS("Your apiary has been added to your account");
-            hbf.sendSMS("What is the latitude of your apiary? If you do not know, respond SKIP");
+        if(response.length() != 0) {
+            if(conversation.getHoneyBeeFarmer().getApiaries() != null) {
+                for (Apiary apiary : conversation.getHoneyBeeFarmer().getApiaries()) {
+                    if (apiary.getName().compareTo(response) == 0) {
+                        conversation.getHoneyBeeFarmer().sendSMS("An apiary with the name \"" + response + "\" already exists. Please choose a different name.");
+                        return;
+                    }
+                }
+            }
+            this.apiary.setName(response);
+            conversation.getHoneyBeeFarmer().sendSMS("What is the latitude of your apiary?\nExample: 89.9\n\nIf you do not know, respond SKIP.");
             currentMsg++;
         } else {
-            hbf.sendSMS("Sorry but the apiary name must consist of at least one character or number");
+            conversation.getHoneyBeeFarmer().sendSMS("Sorry but the apiary name must consist of at least one character or number");
         }
     }
 
@@ -110,14 +99,14 @@ public class AddApiary extends Sequence {
             Location location = apiary.getLocation();
             location.setLatitude(Double.parseDouble(response));
             apiary.setLocation(location);
-            hbf.sendSMS("The latitude of the apiary has been recorded.");
+            conversation.getHoneyBeeFarmer().sendSMS("The latitude of the apiary has been recorded.");
             currentMsg++;
         } else if(matcherSkip.matches()) {
-            hbf.sendSMS("Latitude skipped.");
-            hbf.sendSMS("What is the longitude of the apiary? Only include the longitude. If you do not know, respond SKIP");
+            conversation.getHoneyBeeFarmer().sendSMS("Latitude skipped.");
+            conversation.getHoneyBeeFarmer().sendSMS("What is the longitude of the apiary? Only include the longitude.\nExample: 49.9\n\nIf you do not know, respond SKIP.");
             currentMsg++;
         } else {
-            hbf.sendSMS("The latitude is invalid. Only include the latitude. Example: 89.9");
+            conversation.getHoneyBeeFarmer().sendSMS("The latitude is invalid. Only include the latitude.\nExample: 89.45\n\nIf you do not know, respond SKIP.");
         }
     }
 
@@ -140,15 +129,15 @@ public class AddApiary extends Sequence {
             Location location = apiary.getLocation();
             location.setLongitude(Double.parseDouble(response));
             apiary.setLocation(location);
-            hbf.sendSMS("The longitude for the apiary has been recorded.");
-            hbf.sendSMS("How many hives does the apiary have? Only include the number of hive(s). Example: 5");
+            conversation.getHoneyBeeFarmer().sendSMS("The longitude for the apiary has been recorded.");
+            conversation.getHoneyBeeFarmer().sendSMS("How many hives does the apiary have? Only include the number of hive(s).\nExample: 5");
             currentMsg++;
         } else if(matcherSkip.matches()) {
-            hbf.sendSMS("Longitude skipped.");
-            hbf.sendSMS("How many hives does the apiary have? Only include the number of hive(s). Example: 5");
+            conversation.getHoneyBeeFarmer().sendSMS("Longitude skipped.");
+            conversation.getHoneyBeeFarmer().sendSMS("How many hives does the apiary have? Only include the number of hive(s).\nExample: 5");
             currentMsg++;
         } else {
-            hbf.sendSMS("The longitude is invalid. Only include the longitude. Example: -77.0364");
+            conversation.getHoneyBeeFarmer().sendSMS("The longitude is invalid. Only include the longitude.\nExample: -77.0364\n\nIf you do not know, respond SKIP.");
         }
     }
 
@@ -163,15 +152,16 @@ public class AddApiary extends Sequence {
      *      - void
      */
     public void message3() {
-        Pattern pattern = Pattern.compile("\\d+");
+        Pattern pattern = Pattern.compile("\\d");
         Matcher matcher = pattern.matcher(response);
         if(matcher.find()) {
             Integer hiveCount = Integer.parseInt(matcher.group());
             apiary.setHiveCount(hiveCount);
-            hbf.sendSMS("The number of hives at the apiary has been recorded!");
+            conversation.getHoneyBeeFarmer().addApiary(apiary);
+            conversation.getHoneyBeeFarmer().sendSMS("The number of hives at the apiary has been recorded!");
             endSequence();
         } else {
-            hbf.sendSMS("The response was not able to be validated. Only include the number of hive(s). Example: 5");
+            conversation.getHoneyBeeFarmer().sendSMS("The response was not able to be validated. Only include the number of hive(s).\nExample: 5");
         }
     }
 }

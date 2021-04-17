@@ -14,6 +14,7 @@ public class TwilioSMS implements SmsSendBehavior, SmsRetrievalBehavior {
     private final String Auth_Token = "ff19f6bb288e1a64467975134572f904";
     private final ZoneId zoneId = ZoneId.of(ZoneId.systemDefault().getId());
     private final PhoneNumber phoneNumber = new PhoneNumber("+12312412398");
+    private ZonedDateTime lastReceived = ZonedDateTime.now();
 
     public TwilioSMS() {
         Twilio.init(Account_SID, Auth_Token);
@@ -42,7 +43,7 @@ public class TwilioSMS implements SmsSendBehavior, SmsRetrievalBehavior {
      * Return:
      *      - Stack<AdapteeMessage>: a stack containing all new messages.
      */
-    public Stack<AdapteeMessage> getNewMessages(ZonedDateTime lastReceived) {
+    public Stack<AdapteeMessage> getNewMessages() {
         // read in all messages sent after the date of the last message read.
         ResourceSet<Message> messages = Message.reader().setDateSentAfter(lastReceived).setTo(phoneNumber).read();
         // Convert each message into an AdapteeMessage and add it to the stack.
@@ -52,6 +53,7 @@ public class TwilioSMS implements SmsSendBehavior, SmsRetrievalBehavior {
             if(msg.getDateSent().isAfter(lastReceived)) {
                 newMessages.push(new AdapteeMessage(msg.getFrom().toString(), msg.getBody(), msg.getDateSent()));
                 System.out.println(msg.getBody());
+                lastReceived = msg.getDateSent();
             }
         }
 

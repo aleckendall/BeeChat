@@ -3,11 +3,22 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    <repositories>
+        <repository>
+            <id>africastalking</id>
+            <name>AfricasTalking</name>
+            <url>http://dl.bintray.com/africastalking/java</url>
+        </repository>
+    </repositories>
     <groupId>org.example</groupId>
     <artifactId>HiveTracks</artifactId>
     <version>1.0-SNAPSHOT</version>
     <dependencies>
+        <dependency>
+            <groupId>com.africastalking</groupId>
+            <artifactId>core</artifactId>
+            <version>3.4.6</version>
+        </dependency>
         <dependency>
             <groupId>com.twilio.sdk</groupId>
             <artifactId>twilio</artifactId>

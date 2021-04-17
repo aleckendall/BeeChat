@@ -1,19 +1,31 @@
-import java.util.Stack;
+import java.text.ParseException;
 
 public abstract class Sequence {
     protected boolean exit;
     protected String response;
     protected Integer currentMsg = 0;
     protected Conversation conversation;
+    protected boolean live = false;
+    protected boolean paused = false;
 
     public Sequence(Conversation conversation) {
         this.conversation = conversation;
     }
 
-    abstract void handleResponse(String response);
-    abstract void doCurrentMsg();
+    abstract void doCurrentMsg() throws ParseException;
     abstract void startSequence();
     abstract void endSequence();
+
+    /*
+     * Handle the client response.
+     *
+     * @return void
+     */
+    public void handleResponse(String response) throws ParseException {
+        this.setResponse(response);
+        doCurrentMsg();
+        return;
+    }
 
     /*
      * Get the response for the sequence.
@@ -61,4 +73,35 @@ public abstract class Sequence {
     public boolean exitResponse() {
         return exit;
     }
+
+    /*
+     * Getter for ongoing
+     * @return ongoing Indicates if the prompt has been initialized.
+     */
+    public boolean getLive() {
+        return this.live;
+    }
+
+    /*
+     * Setter for ongoing.
+     * @return void
+     * @param ongoing
+     */
+    public void setLive(boolean live) {
+        this.live = live;
+    }
+
+    /*
+     * Set the paused field for the sequence class.
+     * Return:
+     *      - void
+     */
+    public void setPaused(boolean paused) { this.paused = paused; }
+
+    /*
+     * Get the paused field for the sequence class.
+     * Return:
+     *      - boolean: paused
+     */
+     public boolean getPaused() { return this.paused; }
 }

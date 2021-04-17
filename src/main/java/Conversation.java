@@ -1,6 +1,6 @@
-import com.twilio.twiml.voice.Sim;
+import org.eclipse.jetty.security.PropertyUserStore;
 
-import java.io.IOException;
+import java.text.ParseException;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,14 +62,15 @@ public class Conversation {
         sequences = new Stack<>();
         sequences.trimToSize();
         if(hbf.exists()) {
+            sequences.push(new MainMenu(this));
         } else {
+            sequences.push(new Onboard(this));
         }
-        sequences.push(new Onboard(this));
-        sequences.peek().handleResponse("");
+        sequences.peek().startSequence();
     }
 
     /*
-     * Add a sequence to the sequence stack.
+     * Add a Sequence to the Sequence Stack.
      *
      * @return void
      * @param Sequence to add to the Sequence Stack
@@ -84,17 +85,34 @@ public class Conversation {
      * @return void
      * @param resp The response from the honey bee farmer.
      */
-    public void handleResponse(String resp){
+    public void handleResponse(String resp) throws ParseException {
 
-        Pattern pattern = Pattern.compile("QUIT");
-        Matcher matcher = pattern.matcher(resp);
-
-        if(matcher.find() || sequences.size() == 0) {
+        if(sequences.size() == 0) {
             exit = true;
-        } else if(sequences.peek().getExit()) {
-            sequences.pop();
+            return;
+        }
+
+        // start sequence if not already.
+        if(!sequences.peek().getLive()) {
+            sequences.peek().startSequence();
         } else {
+            // continue with sequence if started
             sequences.peek().handleResponse(resp);
+
+            while (sequences.peek().getExit() || !sequences.peek().getLive() || sequences.peek().getPaused() ) {
+                if (sequences.peek().getExit()) {
+                    sequences.pop();
+                    if(sequences.size() == 0) {
+                        exit = true;
+                        return;
+                    }
+                } else if (!sequences.peek().getLive()) {
+                    sequences.peek().startSequence();
+                    return;
+                } else {
+                    sequences.peek().handleResponse("");
+                }
+            }
         }
     }
 }

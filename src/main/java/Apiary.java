@@ -11,9 +11,12 @@ public class Apiary {
     private ArrayList<Visit> visits;
     private Date creationDate;
 
-    public Apiary(String name, Date creationDate) {
+    public Apiary() {
+        this.creationDate = new Date(System.currentTimeMillis());
+    }
+
+    public Apiary(String name) {
         this.name = name;
-        this.creationDate = creationDate;
     }
 
     public Apiary(String name, Location location, ArrayList<Hive> hives, ArrayList<Visit> visits, Date creationDate) {
@@ -226,5 +229,13 @@ public class Apiary {
             }
             counter++;
         }
+    }
+
+    /*
+     * toString for Apiary
+     * @return String
+     */
+    public String toString() {
+        return "Name: " + name + ", hive(s): " + hiveCount;
     }
 }

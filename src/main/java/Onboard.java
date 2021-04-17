@@ -5,21 +5,23 @@ public class Onboard extends Sequence {
 
     public Onboard(Conversation conversation) {
         super(conversation);
-        startSequence();
     }
 
     public void startSequence() {
         conversation.getHoneyBeeFarmer().sendSMS("Welcome to HiveTracks! We'll need to collect some information so we can set up your profile.");
-        conversation.getHoneyBeeFarmer().sendSMS("What is your first name? Include only your first name. Example: John");
+        conversation.getHoneyBeeFarmer().sendSMS("What is your first name? Include only your first name. \n\nExample: John");
+        this.setLive(true);
     }
 
     /*
      * Perform end of sequence tasks.
      */
     public void endSequence() {
-        exit = true;
         conversation.getDatabase().updateHoneyBeeFarmer(conversation.getHoneyBeeFarmer());
-        conversation.getHoneyBeeFarmer().sendSMS("Your profile is now complete!");
+        conversation.getHoneyBeeFarmer().sendSMS("Your profile is now complete! Taking you back to the main menu...");
+        conversation.addSequence(new MainMenu(conversation));
+        paused = false;
+        exit = true;
     }
 
     /*
@@ -43,13 +45,6 @@ public class Onboard extends Sequence {
         }
     }
 
-    /*
-     * Call the next msg.
-     */
-    public void handleResponse(String response) {
-        this.setResponse(response);
-        doCurrentMsg();
-    }
 
     /*
      * ------ Name Segment 1/2 ------
@@ -68,11 +63,11 @@ public class Onboard extends Sequence {
             //update msg
             conversation.getHoneyBeeFarmer().setFirstName(response);
             conversation.getHoneyBeeFarmer().sendSMS("Your first name has been added to your account.");
-            conversation.getHoneyBeeFarmer().sendSMS("What is your last name? Include only your last name. Example: Smith");
+            conversation.getHoneyBeeFarmer().sendSMS("What is your last name? Include only your last name.\n\nExample: Smith");
             currentMsg++;
         } else {
             // Invalid response (name)
-            conversation.getHoneyBeeFarmer().setFirstName("The name did not match the format we are expecting. Please use only letters.");
+            conversation.getHoneyBeeFarmer().sendSMS("The name did not match the format we are expecting.\nPlease use only letters.");
         }
     }
 
@@ -92,10 +87,10 @@ public class Onboard extends Sequence {
         if(matcher.matches()) {
             conversation.getHoneyBeeFarmer().setLastName(response);
             conversation.getHoneyBeeFarmer().sendSMS("Okay, your last name has been added to your profile.");
-            conversation.getHoneyBeeFarmer().sendSMS("What is the number of apiaries you operate? Use a number and do not include any additional information. Example: 8");
+            conversation.getHoneyBeeFarmer().sendSMS("What is the number of apiaries you operate? Use a number and do not include any additional information.\n\nExample: 8");
             currentMsg++;
         } else {
-            conversation.getHoneyBeeFarmer().sendSMS("Sorry, but your response was not recognized as a valid response. Include only your last name using letters.");
+            conversation.getHoneyBeeFarmer().sendSMS("Sorry, but your response was not recognized as a valid response.\nInclude only your last name using letters.");
         }
     }
 
@@ -113,15 +108,22 @@ public class Onboard extends Sequence {
         if(matcher.find()) {
             Integer apiaryCount = Integer.parseInt(matcher.group());
             conversation.getHoneyBeeFarmer().setApiaryCount(apiaryCount);
+            if(apiaryCount == 0) {
+                exit = true;
+                currentMsg++;
+                conversation.getDatabase().updateHoneyBeeFarmer(conversation.getHoneyBeeFarmer());
+                endSequence();
+                return;
+            }
+            conversation.getHoneyBeeFarmer().sendSMS("Okay, we'll now add " + apiaryCount + " apiaries to your account.");
             for(int i = 0; i < apiaryCount; i++) {
                 conversation.addSequence(new AddApiary(conversation));
             }
-            conversation.getHoneyBeeFarmer().sendSMS("The number of apiaries you operate has been added to your profile.");
-            exit = true;
             currentMsg++;
+            paused = true;
             conversation.getDatabase().updateHoneyBeeFarmer(conversation.getHoneyBeeFarmer());
         } else {
-            conversation.getHoneyBeeFarmer().sendSMS("Sorry, but your response was not recognized as a valid response. Include only the number of apiaries you operate using a number. Example: 4");
+            conversation.getHoneyBeeFarmer().sendSMS("Sorry, but your response was not recognized as a valid response.\nInclude only the number of apiaries you operate using a number. Example: 4");
         }
     }
 }

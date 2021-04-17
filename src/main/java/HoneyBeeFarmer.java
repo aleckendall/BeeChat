@@ -13,11 +13,10 @@ public class HoneyBeeFarmer {
     protected SimulateHoneyBeeFarmerDB db;
 
     public HoneyBeeFarmer(String telephoneNumber) {
-        this.telephoneNumber = new PhoneNumber(telephoneNumber);
+        this.setTelephoneNumber(new PhoneNumber(telephoneNumber));
         db = SimulateHoneyBeeFarmerDB.getInstance();
         if(db.exists(this.telephoneNumber.toString())) {
             HoneyBeeFarmer profile = db.getHoneyBeeFarmer(this.telephoneNumber.toString());
-            System.out.println(profile);
             this.setProperties(profile);
         } else {
             setTelephoneNumber(new PhoneNumber(telephoneNumber));
@@ -115,11 +114,47 @@ public class HoneyBeeFarmer {
     }
 
     /*
+     * Remove the apiary from the honey bee farmer account.
+     * Return:
+     *      - void
+     */
+    public void removeApiary(Apiary apiary) {
+        for(int i = 0; i < apiaries.size(); i++) {
+            if (apiaries.get(i).getName().compareTo(apiary.getName()) == 0) {
+                apiaries.remove(i);
+                return;
+            }
+        }
+        // apiary already removed from the apiaries for the hbf.
+        return;
+    }
+
+    /*
      * Add an apiary to the list of apiaries.
      * Return:
      *      - void.
      */
-    public void addApiary(Apiary apiary) { this.apiaries.add(apiary); }
+    public void addApiary(Apiary apiary) {
+        if(this.apiaries == null) {
+           apiaries = new ArrayList<>();
+        }
+        this.apiaries.add(apiary);
+    }
+
+    /*
+     * Get an apiary given its name.
+     * Return:
+     *      - Apiary apiary The apiary with the match name
+     *      - null No apiaries with a name matching the argument
+     */
+    public Apiary getApiary(String name) {
+        for(final Apiary apiary : apiaries) {
+            if(apiary.getName().compareTo(name) == 0) {
+                return apiary;
+            }
+        }
+        return null;
+    }
 
     /*
      * Set the apiaries operated by the honey bee farmer.
@@ -134,6 +169,20 @@ public class HoneyBeeFarmer {
      */
     public ArrayList<Apiary> getApiaries() {
         return this.apiaries;
+    }
+
+    /*
+     * Get the formatted string list of apiaries:
+     * Return:
+     *      - String apiaries The string representation of the apiaries
+     */
+    public String getApiaryList() {
+        String apiaryString = "";
+        int apiaryIndex = 1;
+        for(final Apiary apiary : this.apiaries) {
+            apiaryString += apiaryIndex++ + ". " + apiary.getName() + "\n";
+        }
+        return apiaryString;
     }
 
     /*

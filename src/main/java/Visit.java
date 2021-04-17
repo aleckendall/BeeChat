@@ -9,6 +9,10 @@ public class Visit {
     //Currently not used.
     private Hive hive;
 
+    public Visit(Date visitDate) {
+        this.visitDate = visitDate;
+    }
+
     public Visit(Date visitDate, String id, ArrayList<Task> tasks) {
         this.visitDate = visitDate;
         this.id = id;
