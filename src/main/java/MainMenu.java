@@ -28,12 +28,26 @@ public class MainMenu extends Sequence {
         Pattern pattern1 = Pattern.compile("^1$");
         Pattern pattern2 = Pattern.compile("^2$");
         Pattern pattern3 = Pattern.compile("^3$");
-        Matcher matcher = pattern1.matcher(response);
 
+        Matcher matcher = pattern1.matcher(response);
         if(matcher.find()) {
             // record a visit
             conversation.addSequence(new RecordVisit(conversation));
-            this.endSequence();
+            endSequence();
+            return;
+        }
+
+        matcher = pattern2.matcher(response);
+        if(matcher.find()) {
+            conversation.addSequence(new EditApiary(conversation));
+            endSequence();
+            return;
+        }
+
+        matcher = pattern3.matcher(response);
+        if(matcher.find()) {
+            conversation.addSequence(new ManageAccount(conversation));
+            endSequence();
             return;
         }
 

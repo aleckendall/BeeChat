@@ -22,7 +22,7 @@ public abstract class Sequence {
      * @return void
      */
     public void handleResponse(String response) throws ParseException {
-        this.setResponse(response);
+        setResponse(response);
         doCurrentMsg();
         return;
     }
