@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
-public class Monitor {
+public abstract class Monitor {
     protected SmsRetrievalBehavior smsRetrievalBehavior;
     protected HashMap<String, Conversation> conversations = new HashMap<>();
 
     public Monitor() {
     }
+
+    public abstract void processMessages() throws Exception;
 
     /*
      * Add an active conversations to the monitor.
@@ -54,37 +56,11 @@ public class Monitor {
         return smsRetrievalBehavior.getNewMessages();
     }
 
-    /*
-     * Handle the messages received from the client.
-     * Return:
-     *      - void
-     */
-    public void processMessages() throws Exception {
-        Stack<AdapteeMessage> newMessages = getNewMessages();
-        for(AdapteeMessage msg : newMessages) {
-
-            Conversation conv;
-            String phoneNumber = msg.getFrom();
-
-            if(getConversations().containsKey(phoneNumber)) {
-                conv = getConversations().get(phoneNumber);
-                conv.handleResponse(msg.getContent());
-                if(conv.exit()) {
-                    removeConversation(phoneNumber);
-                    System.out.println("Conversation exited.");
-                }
-            } else {
-                conv = new Conversation(new USAHBF(phoneNumber));
-                getConversations().put(phoneNumber, conv);
-                System.out.println("Conversation with " + phoneNumber.toString() + " created.");
-            }
-        }
-    }
 
     public static void main(String[] args) throws Exception {
         ArrayList<Monitor> monitors;
         MonitorFactory mc = new MonitorFactory();
-        HoneyBeeFarmer kendall = new USAHBF("+19198306807");
+        HoneyBeeFarmer kendall = new TestHBF("+19198306807");
         kendall.sendSMS("Oops, you can ignore that.");
         if(args.length > 0) {
             monitors = new ArrayList<>();

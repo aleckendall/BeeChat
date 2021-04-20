@@ -10,10 +10,10 @@ import java.time.ZonedDateTime;
 import java.util.Stack;
 
 public class TestSMS implements SmsSendBehavior, SmsRetrievalBehavior {
-    private final String Account_SID = "";
-    private final String Auth_Token = "";
+    private final String Account_SID = "ACeeca045c291102da006adc6a38534c83";
+    private final String Auth_Token = "ff19f6bb288e1a64467975134572f904";
     private final ZoneId zoneId = ZoneId.of(ZoneId.systemDefault().getId());
-    private final PhoneNumber phoneNumber = new PhoneNumber("");
+    private final PhoneNumber phoneNumber = new PhoneNumber("+12312412398");
     private ZonedDateTime lastReceived = ZonedDateTime.now();
 
     public TestSMS() {

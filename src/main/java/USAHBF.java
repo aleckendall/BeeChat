@@ -10,4 +10,5 @@ public class USAHBF extends HoneyBeeFarmer {
         super(firstName, lastName, telephoneNumber, id, apiaries, location);
         setSmsSendBehavior(new TwilioSMS());
     }
+
 }

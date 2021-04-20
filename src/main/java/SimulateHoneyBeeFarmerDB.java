@@ -7,6 +7,10 @@ public class SimulateHoneyBeeFarmerDB {
     private volatile static SimulateHoneyBeeFarmerDB uniqueInstance;
     private SimulateHoneyBeeFarmerDB(){
         honeyBeeFarmers = new HashMap<>();
+        ArrayList<Apiary> apiaries = new ArrayList<>();
+        apiaries.add(new Apiary("Big Hill"));
+        apiaries.add(new Apiary("Small Rock"));
+        HoneyBeeFarmer me = new TestHBF("Alec", "Kendall", "+19198306807", "0", apiaries, null);
     }
 
     public static SimulateHoneyBeeFarmerDB getInstance() {
