@@ -20,7 +20,7 @@ public class UpdateName extends Sequence {
         setExit(true);
         conversation.getDatabase().updateHoneyBeeFarmer(conversation.getHoneyBeeFarmer());
         conversation.addSequence(new MainMenu(conversation));
-        System.out.println("End UpdateName Sequence");
+        System.out.println("End UpdateName Sequence\n");
     }
 
     public void doCurrentMsg() {

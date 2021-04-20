@@ -60,8 +60,6 @@ public abstract class Monitor {
     public static void main(String[] args) throws Exception {
         ArrayList<Monitor> monitors;
         MonitorFactory mc = new MonitorFactory();
-        HoneyBeeFarmer kendall = new TestHBF("+19198306807");
-        kendall.sendSMS("Oops, you can ignore that.");
         if(args.length > 0) {
             monitors = new ArrayList<>();
             for(String arg : args) {

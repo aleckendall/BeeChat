@@ -11,6 +11,7 @@ public class SimulateHoneyBeeFarmerDB {
         apiaries.add(new Apiary("Big Hill"));
         apiaries.add(new Apiary("Small Rock"));
         HoneyBeeFarmer me = new TestHBF("Alec", "Kendall", "+19198306807", "0", apiaries, null);
+        honeyBeeFarmers.put(me.getTelephoneNumber().toString(), me);
     }
 
     public static SimulateHoneyBeeFarmerDB getInstance() {

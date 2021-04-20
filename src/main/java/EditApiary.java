@@ -22,7 +22,7 @@ public class EditApiary extends Sequence {
         String prompt = "Select an apiary.\nInclude only the number associated with the apiary.\n\nExample: 1\n\nOptions:\n" + conversation.getHoneyBeeFarmer().getApiaryList();
         conversation.getHoneyBeeFarmer()
                 .sendSMS(prompt);
-        System.out.println(prompt);
+        System.out.println(prompt + "\n");
     }
 
     public void endSequence() {

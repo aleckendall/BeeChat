@@ -17,7 +17,7 @@ public class DeleteAccount extends Sequence {
 
     public void endSequence() {
         setExit(true);
-        System.out.println("End DeleteAccount Sequence");
+        System.out.println("End DeleteAccount Sequence\n");
     }
 
     public void doCurrentMsg() {

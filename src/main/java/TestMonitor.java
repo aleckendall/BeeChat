@@ -28,9 +28,9 @@ public class TestMonitor extends Monitor {
                     System.out.println("Conversation exited.");
                 }
             } else {
+                System.out.println("Conversation with " + phoneNumber.toString() + " created.");
                 conv = new Conversation(new TestHBF(phoneNumber));
                 getConversations().put(phoneNumber, conv);
-                System.out.println("Conversation with " + phoneNumber.toString() + " created.");
             }
         }
     }

@@ -52,7 +52,6 @@ public class TestSMS implements SmsSendBehavior, SmsRetrievalBehavior {
         for(Message msg : messages) {
             if(msg.getDateSent().isAfter(lastReceived)) {
                 newMessages.push(new AdapteeMessage(msg.getFrom().toString(), msg.getBody(), msg.getDateSent()));
-                System.out.println(msg.getBody());
                 lastReceived = msg.getDateSent();
             }
         }

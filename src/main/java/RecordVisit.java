@@ -35,7 +35,7 @@ public class RecordVisit extends Sequence {
         // Save the honey bee farmer to persistent storage.
         this.conversation.getDatabase().updateHoneyBeeFarmer(conversation.getHoneyBeeFarmer());
         conversation.addSequence(new MainMenu(conversation));
-        System.out.println("End RecordVisit Sequence");
+        System.out.println("End RecordVisit Sequence\n");
     }
 
     public void doCurrentMsg() throws ParseException {
@@ -66,13 +66,13 @@ public class RecordVisit extends Sequence {
         if(matcher.find()) {
             while(matcher.find()) {
                 Integer index = Integer.parseInt(matcher.group())-1;
-                if(index > conversation.getHoneyBeeFarmer().getApiaries().size()) {
+                if(index >= conversation.getHoneyBeeFarmer().getApiaries().size()) {
                     String apiaries = "";
                     int apiaryIndex = 1;
                     for(Apiary apiary : conversation.getHoneyBeeFarmer().getApiaries()) {
                         apiaries += apiaryIndex++ + ". " + apiary.getName() + "\n";
                     }
-                    String prompt = "Apiary with index " + index + " does not exist.\nPlease choose from the following options:\n" + apiaries + "\nRespond MENU to be taken back to the main menu.";
+                    String prompt = "Apiary \"" + index + "\" does not exist.\nPlease choose from the following options:\n" + apiaries + "\nRespond MENU to be taken back to the main menu.";
                     conversation.getHoneyBeeFarmer().sendSMS(prompt);
                     return;
                 }
@@ -94,9 +94,14 @@ public class RecordVisit extends Sequence {
 
         if(matcher.matches()) {
             Date visitDate = new SimpleDateFormat("MM/dd/yyyy").parse(response);
-            System.out.println(visitDate);
             for(Apiary apiary : visited) {
-                apiary.getVisits().add(new Visit(visitDate));
+                if(apiary.getVisits() == null) {
+                    ArrayList<Visit> visits = new ArrayList<>();
+                    visits.add(new Visit(visitDate));
+                    apiary.setVisits(visits);
+                } else {
+                    apiary.getVisits().add(new Visit(visitDate));
+                }
             }
             String prompt = "Your visit(s) have been recorded.\n\nReturning to the main menu...";
             conversation.getHoneyBeeFarmer().sendSMS(prompt);

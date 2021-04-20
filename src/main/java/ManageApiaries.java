@@ -18,7 +18,7 @@ public class ManageApiaries extends Sequence {
 
     public void endSequence() {
         setExit(true);
-        System.out.println("End ManageApiaries Sequence");
+        System.out.println("End ManageApiaries Sequence\n");
     }
 
     public void doCurrentMsg() {

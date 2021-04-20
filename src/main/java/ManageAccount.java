@@ -17,7 +17,7 @@ public class ManageAccount extends Sequence {
 
     public void endSequence() {
         setExit(true);
-        System.out.println("End ManageAccount Sequence");
+        System.out.println("End ManageAccount Sequence\n");
     }
 
     public void doCurrentMsg() {

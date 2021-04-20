@@ -18,7 +18,7 @@ public class EditApiaryName extends Sequence {
         this.setExit(true);
         conversation.getDatabase().updateHoneyBeeFarmer(conversation.getHoneyBeeFarmer());
         conversation.addSequence(new MainMenu(conversation));
-        System.out.println("End EditApiaryName Sequence");
+        System.out.println("End EditApiaryName Sequence\n");
     }
 
     public void doCurrentMsg() {

@@ -23,7 +23,7 @@ public class EditApiaryHiveCount extends Sequence {
         this.setExit(true);
         conversation.getDatabase().updateHoneyBeeFarmer(conversation.getHoneyBeeFarmer());
         conversation.addSequence(new MainMenu(conversation));
-        System.out.println("End EditApiaryHiveCount Sequence");
+        System.out.println("End EditApiaryHiveCount Sequence\n");
     }
 
     public void doCurrentMsg() {

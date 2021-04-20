@@ -17,7 +17,7 @@ public class MainMenu extends Sequence {
 
     public void endSequence() {
         this.setExit(true);
-        System.out.println("End MainMenu Sequence");
+        System.out.println("End MainMenu Sequence\n");
     }
 
     public void doCurrentMsg() {
