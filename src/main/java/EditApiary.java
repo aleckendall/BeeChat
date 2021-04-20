@@ -19,9 +19,10 @@ public class EditApiary extends Sequence {
         }
         setLive(true);
         // ask which apiary to edit.
-        String prompt = "Select an apiary.\nInclude only the number associated with the apiary.\n\nExample: 1\n\nOptions:\n" + conversation.getHoneyBeeFarmer().getApiaryList();
+        String prompt = "Choose an apiary:\n" + conversation.getHoneyBeeFarmer().getApiaryList() + "\n\nExample: 1";
         conversation.getHoneyBeeFarmer()
                 .sendSMS(prompt);
+        System.out.println("Begin EditApiary Sequence\n");
         System.out.println(prompt + "\n");
     }
 
@@ -47,6 +48,7 @@ public class EditApiary extends Sequence {
      *      - void
      */
     public void msg0() {
+        System.out.println("Message 1/2");
         // regex to match against digit
         Pattern pattern = Pattern.compile("\\d");
         Matcher matcher = pattern.matcher(response);
@@ -58,12 +60,12 @@ public class EditApiary extends Sequence {
 
             // decrement response by one since output is formatted from 1 up
             apiaryToEdit = conversation.getHoneyBeeFarmer().getApiaries().get(responseInt - 1);
-            String prompt = "What would you like to do to the apiary?\nOptions:\n" + "1. Change name\n2. Change number of hives\n3. Delete apiary";
+            String prompt = "What would you like to do to the apiary?\nOptions:\n" + "1. Change name\n2. Change number of hives\n3. Delete apiary\n\nExample:\n3";
             conversation.getHoneyBeeFarmer().sendSMS(prompt);
             System.out.println(prompt);
             currentMsg++;
         } else {
-            String prompt = "\"" + response + "\" is not a valid apiary. Include only the number associated with the apiary.\n\nExample: 1" + "\n\nOptions:\n" + conversation.getHoneyBeeFarmer().getApiaryList();
+            String prompt = "\"" + response + "\" is not a valid apiary. Include only the number associated with the apiary." + "\n\nExample:\n1" + "\n\nOptions:\n" + conversation.getHoneyBeeFarmer().getApiaryList();
             conversation.getHoneyBeeFarmer().sendSMS(prompt);
             System.out.println(prompt);
         }
@@ -77,6 +79,7 @@ public class EditApiary extends Sequence {
     public void msg1() {
         Pattern pattern = Pattern.compile("^1|2|3$");
         Matcher matcher = pattern.matcher(response);
+        System.out.println("Message 2/2");
 
         if(matcher.find()) {
             Integer optionSelected = Integer.parseInt(matcher.group());
@@ -92,7 +95,7 @@ public class EditApiary extends Sequence {
                     break;
                 case 3:
                     conversation.getHoneyBeeFarmer().removeApiary(apiaryToEdit);
-                    String prompt = "Apiary has successfully been removed. \n\nReturning to the main menu...";
+                    String prompt = "Apiary has successfully been removed.\n\nReturning to the main menu...";
                     conversation.getHoneyBeeFarmer().sendSMS(prompt);
                     System.out.println(prompt);
                     conversation.addSequence(new MainMenu(conversation));

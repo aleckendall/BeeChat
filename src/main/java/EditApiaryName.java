@@ -7,7 +7,7 @@ public class EditApiaryName extends Sequence {
     }
 
     public void startSequence() {
-        System.out.println("Begin EditApiaryName Sequence");
+        System.out.println("Begin EditApiaryName Sequence\n");
         String prompt = "Enter the new name of the apiary. Include only the new name of the apiary.\n\nExample: Mountain Peak";
         System.out.println(prompt);
         conversation.getHoneyBeeFarmer().sendSMS(prompt);
@@ -33,6 +33,8 @@ public class EditApiaryName extends Sequence {
 
 
     public void msg0() {
+        System.out.println("Message 1/1");
+
         String prompt;
         if(response.length() == 0) {
             prompt = "The name for the apiary cannot be blank. Include only the new name of the apiary.\n\nExample: Delta Apiary";

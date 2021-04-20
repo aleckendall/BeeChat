@@ -9,9 +9,9 @@ public class ManageApiaries extends Sequence {
 
     public void startSequence() {
         setLive(true);
-        System.out.println("Begin ManageApiaries Sequence");
+        System.out.println("Begin ManageApiaries Sequence\n");
         String apiaryList = conversation.getHoneyBeeFarmer().getApiaryList();
-        String prompt = apiaryList + "\nManage Apiaries\nSelect an option to do:\n1. Add apiary\n2. Edit existing apiary\n\nExample: 1";
+        String prompt = "Manage Apiaries\n\nApiaries:\n" + apiaryList + "\nChoose an option:\n1. Add apiary\n2. Edit existing apiary\n\nExample:\n1";
         System.out.println(prompt);
         conversation.getHoneyBeeFarmer().sendSMS(prompt);
     }
@@ -33,6 +33,7 @@ public class ManageApiaries extends Sequence {
     public void msg0() {
         Pattern pattern = Pattern.compile("^1|2$");
         Matcher matcher = pattern.matcher(response);
+        System.out.println("Message 1/1");
 
         if(matcher.find()) {
             Integer optionSelected = Integer.parseInt(matcher.group());
@@ -48,7 +49,8 @@ public class ManageApiaries extends Sequence {
             endSequence();
             return;
         } else {
-            String prompt = "Invalid option selected. Please choose from the following options. Include only the option number, and nothing else.\n\nExample: 1";
+            String prompt = "Invalid option selected. Please choose from the following options. Include only the option number, and nothing else.\n" +
+                    "\nChoose an option:\n1. Add apiary\n2. Edit existing apiary\n\nExample:\n1";
             conversation.getHoneyBeeFarmer().sendSMS(prompt);
         }
     }

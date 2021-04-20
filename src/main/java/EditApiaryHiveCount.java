@@ -1,5 +1,3 @@
-import com.sun.tools.javac.Main;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,9 +11,9 @@ public class EditApiaryHiveCount extends Sequence {
 
     public void startSequence() {
         this.setLive(true);
-        String prompt = "Apiary: " + apiaryToEdit.getName() + "\nCurrent number of hive(s): " + apiaryToEdit.getHiveCount() + "\n\nWhat is the new number of hive(s) associated with \"" + apiaryToEdit.getName() + "\"? Include only the new number of hive(s).\n\nExample: 5";
+        String prompt = "Apiary: " + apiaryToEdit.getName() + "\nCurrent number of hive(s): " + apiaryToEdit.getHiveCount() + "\n\nWhat is the new number of hive(s) associated with \"" + apiaryToEdit.getName() + "\"? Include only the new number of hive(s).\n\nExample:\n5";
         conversation.getHoneyBeeFarmer().sendSMS(prompt);
-        System.out.println("Begin EditApiaryHiveCount Sequence");
+        System.out.println("Begin EditApiaryHiveCount Sequence\n");
         System.out.println(prompt);
     }
 
@@ -39,6 +37,7 @@ public class EditApiaryHiveCount extends Sequence {
     public void msg0() {
         Pattern pattern = Pattern.compile("\\d");
         Matcher matcher = pattern.matcher(response);
+        System.out.println("Message 1/1");
 
         if(matcher.find()) {
             int hiveCount = Integer.parseInt(response);
@@ -49,7 +48,7 @@ public class EditApiaryHiveCount extends Sequence {
             System.out.println(prompt);
             endSequence();
         } else {
-            String prompt = "Invalid number of hive(s). Include only the number of hives.\n\nExample: 5";
+            String prompt = "Invalid number of hive(s). Include only the number of hives.\n\nExample:\n5";
             conversation.getHoneyBeeFarmer().sendSMS(prompt);
         }
     }

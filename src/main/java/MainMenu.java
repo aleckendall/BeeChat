@@ -8,8 +8,8 @@ public class MainMenu extends Sequence {
     }
 
     public void startSequence() {
-        System.out.println("Begin MainMenu Sequence");
-        String prompt = "Main Menu\nPlease select an option:\n1. Record a visit\n2. Manage apiaries\n3. Manage account\n\nExample: 2";
+        System.out.println("Begin MainMenu Sequence\n");
+        String prompt = "Main Menu\nPlease select an option:\n1. Record a visit\n2. Manage apiaries\n3. Manage account\n\nExample:\n2";
         System.out.println(prompt);
         conversation.getHoneyBeeFarmer().sendSMS(prompt);
         this.setLive(true);
@@ -32,6 +32,7 @@ public class MainMenu extends Sequence {
         Pattern pattern1 = Pattern.compile("^1$");
         Pattern pattern2 = Pattern.compile("^2$");
         Pattern pattern3 = Pattern.compile("^3$");
+        System.out.println("Message 1/1");
 
         Matcher matcher = pattern1.matcher(response);
         if(matcher.find()) {
@@ -54,7 +55,7 @@ public class MainMenu extends Sequence {
             endSequence();
             return;
         }
-        String prompt = "Sorry but your response is not valid.\nPlease choose from the following options:\n1. Record a visit\n2. Manage Apiaries\n3. Manage account\n\nExample: 1";
+        String prompt = "Sorry but your response is not valid.\nPlease choose from the following options:\n1. Record a visit\n2. Manage apiaries\n3. Manage account\n\nExample:\n1";
         System.out.println(prompt);
         conversation.getHoneyBeeFarmer().sendSMS(prompt);
     }

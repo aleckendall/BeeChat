@@ -52,6 +52,16 @@ public class Conversation {
     }
 
     /*
+     * Pop all sequences from the stack.
+     * Return:
+     *      - void
+     */
+    public void clearSequences() {
+        sequences.clear();
+        exit = true;
+    }
+
+    /*
      * Add the appropriate Sequence to the Sequence Stack.
      * Onboard if their phone number is not in the database.
      * Main Menu if it is.
@@ -86,8 +96,8 @@ public class Conversation {
      * @param resp The response from the honey bee farmer.
      */
     public void handleResponse(String resp) throws ParseException {
-
-        if(sequences.size() == 0) {
+        sequences.trimToSize();
+        if(sequences.size() == 0 || sequences.peek() == null) {
             exit = true;
             return;
         }
@@ -99,7 +109,7 @@ public class Conversation {
             // continue with sequence if started
             sequences.peek().handleResponse(resp);
 
-            while (sequences.peek().getExit() || !sequences.peek().getLive() || sequences.peek().getPaused() ) {
+            while (sequences.size() != 0 && (sequences.peek().getExit() || !sequences.peek().getLive() || sequences.peek().getPaused() )) {
                 if (sequences.peek().getExit()) {
                     sequences.pop();
                     if(sequences.size() == 0) {
@@ -113,5 +123,6 @@ public class Conversation {
                 }
             }
         }
+
     }
 }

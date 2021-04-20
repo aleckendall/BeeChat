@@ -9,7 +9,7 @@ public class DeleteAccount extends Sequence {
 
     public void startSequence() {
         setLive(true);
-        System.out.println("Begin DeleteAccount Sequence");
+        System.out.println("Begin DeleteAccount Sequence\n");
         String prompt = "Are you sure you want to delete your account? This action will not be able to be undone. Respond Y for yes or N for no.\n\nExample: N";
         conversation.getHoneyBeeFarmer().sendSMS(prompt);
         System.out.println(prompt);
@@ -31,10 +31,10 @@ public class DeleteAccount extends Sequence {
     public void msg0() {
         Pattern pattern = Pattern.compile("^N|Y$");
         Matcher matcher = pattern.matcher(response);
-
+        System.out.println("Message 1/1");
         if(matcher.find()) {
-            if(matcher.group(1).compareTo("N") == 0) {
-                String prompt = "Account will not be removed.\nReturning to the main menu...";
+            if(matcher.group().compareTo("N") == 0) {
+                String prompt = "Account will not be removed.\n\nReturning to the main menu...";
                 conversation.getHoneyBeeFarmer().sendSMS(prompt);
                 System.out.println(prompt);
                 conversation.addSequence(new MainMenu(conversation));
@@ -43,6 +43,8 @@ public class DeleteAccount extends Sequence {
                 System.out.println(prompt);
                 conversation.getHoneyBeeFarmer().sendSMS(prompt);
                 conversation.getDatabase().removeHoneyBeeFarmer(conversation.getHoneyBeeFarmer());
+                conversation.clearSequences();
+                return;
             }
             endSequence();
         } else {

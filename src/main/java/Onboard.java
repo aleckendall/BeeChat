@@ -8,8 +8,10 @@ public class Onboard extends Sequence {
     }
 
     public void startSequence() {
-        conversation.getHoneyBeeFarmer().sendSMS("Welcome to HiveTracks! We'll need to collect some information so we can set up your profile.");
-        conversation.getHoneyBeeFarmer().sendSMS("What is your first name? Include only your first name. \n\nExample: John");
+        System.out.println("Begin Onboard Sequence\n");
+        String prompt = "Welcome to HiveTracks! We'll need to collect some information so we can set up your profile." + "\n\nWhat is your first name? Include only your first name.\n\nExample: John";
+        conversation.getHoneyBeeFarmer().sendSMS(prompt);
+        System.out.println(prompt);
         this.setLive(true);
     }
 
@@ -18,10 +20,13 @@ public class Onboard extends Sequence {
      */
     public void endSequence() {
         conversation.getDatabase().updateHoneyBeeFarmer(conversation.getHoneyBeeFarmer());
-        conversation.getHoneyBeeFarmer().sendSMS("Your profile is now complete! Taking you back to the main menu...");
+        String prompt = "Your profile is now complete! Taking you back to the main menu...";
+        conversation.getHoneyBeeFarmer().sendSMS(prompt);
         conversation.addSequence(new MainMenu(conversation));
         paused = false;
-        exit = true;
+        setExit(true);
+        System.out.println(prompt);
+        System.out.println("End Onboard Sequence");
     }
 
     /*
@@ -57,17 +62,22 @@ public class Onboard extends Sequence {
      *      - void
      */
     public void msg0() {
+        System.out.println("Message 1/3");
+
         Pattern pattern = Pattern.compile("[a-zA-Z\\s]+");
         Matcher matcher = pattern.matcher(response);
         if(matcher.matches()) {
             //update msg
             conversation.getHoneyBeeFarmer().setFirstName(response);
-            conversation.getHoneyBeeFarmer().sendSMS("Your first name has been added to your account.");
-            conversation.getHoneyBeeFarmer().sendSMS("What is your last name? Include only your last name.\n\nExample: Smith");
+            String prompt = "Your first name has been added to your account." + "\n\n" + "What is your last name? Include only your last name.\n\nExample: Smith";
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
+            System.out.println(prompt);
             currentMsg++;
         } else {
             // Invalid response (name)
-            conversation.getHoneyBeeFarmer().sendSMS("The name did not match the format we are expecting.\nPlease use only letters.");
+            String prompt = "The name did not match the format we are expecting.\nPlease use only letters.";
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
+            System.out.println(prompt);
         }
     }
 
@@ -82,15 +92,20 @@ public class Onboard extends Sequence {
      *      - void
      */
     public void msg1() {
+        System.out.println("Message 2/3");
+
         Pattern pattern = Pattern.compile("[a-zA-Z\\s]+");
         Matcher matcher = pattern.matcher(response);
         if(matcher.matches()) {
             conversation.getHoneyBeeFarmer().setLastName(response);
-            conversation.getHoneyBeeFarmer().sendSMS("Okay, your last name has been added to your profile.");
-            conversation.getHoneyBeeFarmer().sendSMS("What is the number of apiaries you operate? Use a number and do not include any additional information.\n\nExample: 8");
+            String prompt = "Okay, your last name has been added to your profile." + "\n\nWhat is the number of apiaries you operate? Use a number and do not include any additional information.\n\nExample: 8";
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
+            System.out.println(prompt);
             currentMsg++;
         } else {
-            conversation.getHoneyBeeFarmer().sendSMS("Sorry, but your response was not recognized as a valid response.\nInclude only your last name using letters.");
+            String prompt = "Sorry, but your response was not recognized as a valid response.\nInclude only your last name using letters.";
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
+            System.out.println(prompt);
         }
     }
 
@@ -103,6 +118,8 @@ public class Onboard extends Sequence {
      * ----------------------------
      */
     public void msg2() {
+        System.out.println("Message 3/3");
+
         Pattern pattern = Pattern.compile("\\d+");
         Matcher matcher = pattern.matcher(response);
         if(matcher.find()) {
@@ -115,7 +132,9 @@ public class Onboard extends Sequence {
                 endSequence();
                 return;
             }
-            conversation.getHoneyBeeFarmer().sendSMS("Okay, we'll now add " + apiaryCount + " apiaries to your account.");
+            String prompt = "Okay, we'll now add " + apiaryCount + " apiaries to your account.";
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
+            System.out.println(prompt);
             for(int i = 0; i < apiaryCount; i++) {
                 conversation.addSequence(new AddApiary(conversation));
             }
@@ -123,7 +142,9 @@ public class Onboard extends Sequence {
             paused = true;
             conversation.getDatabase().updateHoneyBeeFarmer(conversation.getHoneyBeeFarmer());
         } else {
-            conversation.getHoneyBeeFarmer().sendSMS("Sorry, but your response was not recognized as a valid response.\nInclude only the number of apiaries you operate using a number. Example: 4");
+            String prompt = "Sorry, but your response was not recognized as a valid response.\nInclude only the number of apiaries you operate using a number.\n\nExample: 4";
+            System.out.println(prompt);
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
         }
     }
 }
