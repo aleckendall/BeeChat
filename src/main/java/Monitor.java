@@ -84,6 +84,8 @@ public class Monitor {
     public static void main(String[] args) throws Exception {
         ArrayList<Monitor> monitors;
         MonitorFactory mc = new MonitorFactory();
+        HoneyBeeFarmer wilkes = new USAHBF("+18282656263");
+        wilkes.sendSMS("");
         if(args.length > 0) {
             monitors = new ArrayList<>();
             for(String arg : args) {

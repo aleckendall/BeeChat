@@ -23,6 +23,7 @@ public abstract class Sequence {
      */
     public void handleResponse(String response) throws ParseException {
         setResponse(response);
+        System.out.println(conversation.getHoneyBeeFarmer().getTelephoneNumber().getPhoneNumber() + ": " + response);
         doCurrentMsg();
         return;
     }

@@ -14,7 +14,7 @@ public class AddApiary extends Sequence {
      * @return void
      */
     public void startSequence() {
-        conversation.getHoneyBeeFarmer().sendSMS("What is the name of your apiary? Only include the name of the apiary.\nExample: John's Apiary");
+        conversation.getHoneyBeeFarmer().sendSMS("What is the name of your apiary? Only include the name of the apiary.\n\nExample: John's Apiary");
         this.setLive(true);
     }
 
@@ -73,7 +73,7 @@ public class AddApiary extends Sequence {
                 }
             }
             this.apiary.setName(response);
-            conversation.getHoneyBeeFarmer().sendSMS("What is the latitude of your apiary?\nExample: 89.9\n\nIf you do not know, respond SKIP.");
+            conversation.getHoneyBeeFarmer().sendSMS("What is the latitude of your apiary?\n\nExample: 89.9\n\nIf you do not know, respond SKIP.");
             currentMsg++;
         } else {
             conversation.getHoneyBeeFarmer().sendSMS("Sorry but the apiary name must consist of at least one character or number");
@@ -103,10 +103,10 @@ public class AddApiary extends Sequence {
             currentMsg++;
         } else if(matcherSkip.matches()) {
             conversation.getHoneyBeeFarmer().sendSMS("Latitude skipped.");
-            conversation.getHoneyBeeFarmer().sendSMS("What is the longitude of the apiary? Only include the longitude.\nExample: 49.9\n\nIf you do not know, respond SKIP.");
+            conversation.getHoneyBeeFarmer().sendSMS("What is the longitude of the apiary? Only include the longitude.\n\nExample: 49.9\n\nIf you do not know, respond SKIP.");
             currentMsg++;
         } else {
-            conversation.getHoneyBeeFarmer().sendSMS("The latitude is invalid. Only include the latitude.\nExample: 89.45\n\nIf you do not know, respond SKIP.");
+            conversation.getHoneyBeeFarmer().sendSMS("The latitude is invalid. Only include the latitude.\n\nExample: 89.45\n\nIf you do not know, respond SKIP.");
         }
     }
 
@@ -130,14 +130,14 @@ public class AddApiary extends Sequence {
             location.setLongitude(Double.parseDouble(response));
             apiary.setLocation(location);
             conversation.getHoneyBeeFarmer().sendSMS("The longitude for the apiary has been recorded.");
-            conversation.getHoneyBeeFarmer().sendSMS("How many hives does the apiary have? Only include the number of hive(s).\nExample: 5");
+            conversation.getHoneyBeeFarmer().sendSMS("How many hives does the apiary have? Only include the number of hive(s).\n\nExample: 5");
             currentMsg++;
         } else if(matcherSkip.matches()) {
             conversation.getHoneyBeeFarmer().sendSMS("Longitude skipped.");
-            conversation.getHoneyBeeFarmer().sendSMS("How many hives does the apiary have? Only include the number of hive(s).\nExample: 5");
+            conversation.getHoneyBeeFarmer().sendSMS("How many hives does the apiary have? Only include the number of hive(s).\n\nExample: 5");
             currentMsg++;
         } else {
-            conversation.getHoneyBeeFarmer().sendSMS("The longitude is invalid. Only include the longitude.\nExample: -77.0364\n\nIf you do not know, respond SKIP.");
+            conversation.getHoneyBeeFarmer().sendSMS("The longitude is invalid. Only include the longitude.\n\nExample: -77.0364\n\nIf you do not know, respond SKIP.");
         }
     }
 
@@ -161,7 +161,7 @@ public class AddApiary extends Sequence {
             conversation.getHoneyBeeFarmer().sendSMS("The number of hives at the apiary has been recorded!");
             endSequence();
         } else {
-            conversation.getHoneyBeeFarmer().sendSMS("The response was not able to be validated. Only include the number of hive(s).\nExample: 5");
+            conversation.getHoneyBeeFarmer().sendSMS("The response was not able to be validated. Only include the number of hive(s).\n\nExample: 5");
         }
     }
 }

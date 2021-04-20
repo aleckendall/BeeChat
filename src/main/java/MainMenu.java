@@ -8,12 +8,16 @@ public class MainMenu extends Sequence {
     }
 
     public void startSequence() {
-        conversation.getHoneyBeeFarmer().sendSMS("Main Menu\nPlease select an option:\n1. Record a visit\n2. Manage apiaries\n3. Manage account");
+        System.out.println("Begin MainMenu Sequence");
+        String prompt = "Main Menu\nPlease select an option:\n1. Record a visit\n2. Manage apiaries\n3. Manage account\n\nExample: 2";
+        System.out.println(prompt);
+        conversation.getHoneyBeeFarmer().sendSMS(prompt);
         this.setLive(true);
     }
 
     public void endSequence() {
         this.setExit(true);
+        System.out.println("End MainMenu Sequence");
     }
 
     public void doCurrentMsg() {
@@ -39,7 +43,7 @@ public class MainMenu extends Sequence {
 
         matcher = pattern2.matcher(response);
         if(matcher.find()) {
-            conversation.addSequence(new EditApiary(conversation));
+            conversation.addSequence(new ManageApiaries(conversation));
             endSequence();
             return;
         }
@@ -50,7 +54,8 @@ public class MainMenu extends Sequence {
             endSequence();
             return;
         }
-
-        conversation.getHoneyBeeFarmer().sendSMS("Sorry but your response is not valid.\nPlease choose from the following options:\n1. Record a visit\n2. Manage Apiaries\n3. Manage account\n\nExample: 1");
+        String prompt = "Sorry but your response is not valid.\nPlease choose from the following options:\n1. Record a visit\n2. Manage Apiaries\n3. Manage account\n\nExample: 1";
+        System.out.println(prompt);
+        conversation.getHoneyBeeFarmer().sendSMS(prompt);
     }
 }

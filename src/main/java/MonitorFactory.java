@@ -16,6 +16,8 @@ public class MonitorFactory {
         } else if(type.compareTo("ETH") == 0) {
             // return new ethiopia monitor
             return new ETHMonitor();
+        } else if(type.compareTo("TEST") == 0) {
+            return new TestMonitor();
         } else {
             throw new IllegalArgumentException("Monitor of type \"" + type + "\" is not supported.");
         }

@@ -18,21 +18,24 @@ public class RecordVisit extends Sequence {
             endSequence();
             return;
         }
-        String apiaries = "Option(s):\n";
+        System.out.println("Begin RecordVisit Sequence");
+        String apiaries = "\n\nOption(s):\n";
         int apiaryIndex = 1;
         for(Apiary apiary : conversation.getHoneyBeeFarmer().getApiaries()) {
             apiaries += apiaryIndex++ + ". " + apiary.getName() + "\n";
         }
-        conversation.getHoneyBeeFarmer().sendSMS("Which apiaries did you visit? The date of the visit will be the same for all of the apiaries you select. Select at least one; separate multiple apiaries using a comma.\nExamples:\n2\n1,2,3\n\nRespond MENU to be taken back to the main menu.");
-        conversation.getHoneyBeeFarmer().sendSMS(apiaries);
+        String prompt = "Which apiaries did you visit? The date of the visit will be the same for all of the apiaries you select. Select at least one; separate multiple apiaries using a comma.\n\nExamples:\n2\n1,2,3\n\nRespond MENU to be taken back to the main menu." + apiaries;
+        conversation.getHoneyBeeFarmer().sendSMS(prompt);
+        System.out.println(prompt);
         this.setLive(true);
     }
 
     public void endSequence() {
-        this.setLive(false);
+        this.setExit(true);
         // Save the honey bee farmer to persistent storage.
         this.conversation.getDatabase().updateHoneyBeeFarmer(conversation.getHoneyBeeFarmer());
         conversation.addSequence(new MainMenu(conversation));
+        System.out.println("End RecordVisit Sequence");
     }
 
     public void doCurrentMsg() throws ParseException {
@@ -53,6 +56,7 @@ public class RecordVisit extends Sequence {
         Pattern menuPatter = Pattern.compile("MENU");
         Matcher matcher = menuPatter.matcher(response);
         if(matcher.find()) {
+            conversation.getHoneyBeeFarmer().sendSMS("Returning to the main menu...");
             conversation.addSequence(new MainMenu(conversation));
             endSequence();
             return;
@@ -61,14 +65,15 @@ public class RecordVisit extends Sequence {
         matcher = pattern.matcher(response);
         if(matcher.find()) {
             while(matcher.find()) {
-                Integer index = Integer.parseInt(matcher.group(1))-1;
+                Integer index = Integer.parseInt(matcher.group())-1;
                 if(index > conversation.getHoneyBeeFarmer().getApiaries().size()) {
                     String apiaries = "";
                     int apiaryIndex = 1;
                     for(Apiary apiary : conversation.getHoneyBeeFarmer().getApiaries()) {
                         apiaries += apiaryIndex++ + ". " + apiary.getName() + "\n";
                     }
-                    conversation.getHoneyBeeFarmer().sendSMS("Apiary with index " + index + " does not exist.\nPlease choose from the following options:\n" + apiaries + "\nRespond MENU to be taken back to the main menu.");
+                    String prompt = "Apiary with index " + index + " does not exist.\nPlease choose from the following options:\n" + apiaries + "\nRespond MENU to be taken back to the main menu.";
+                    conversation.getHoneyBeeFarmer().sendSMS(prompt);
                     return;
                 }
                 visited.add(
@@ -78,12 +83,13 @@ public class RecordVisit extends Sequence {
                 );
             }
             currentMsg++;
-            conversation.getHoneyBeeFarmer().sendSMS("What is the date of the visit?\n Format: mm/dd/yyyy\nExample:\n12/21/2021");
+            String prompt = "What is the date of the visit?\n\nFormat: mm/dd/yyyy\n\nExample:\n12/21/2021";
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
         }
     }
 
     public void msg1() throws ParseException {
-        Pattern pattern = Pattern.compile("/(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\\d\\d/");
+        Pattern pattern = Pattern.compile("^(0[1-9]|1[012])\\/(0[1-9]|[12][0-9]|3[01])\\/(19|20)\\d\\d$");
         Matcher matcher = pattern.matcher(response);
 
         if(matcher.matches()) {
@@ -92,10 +98,12 @@ public class RecordVisit extends Sequence {
             for(Apiary apiary : visited) {
                 apiary.getVisits().add(new Visit(visitDate));
             }
-            conversation.getHoneyBeeFarmer().sendSMS("Your visit(s) have been recorded. Taking you back to the main menu.");
+            String prompt = "Your visit(s) have been recorded.\n\nReturning to the main menu...";
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
             this.endSequence();
         } else {
-            conversation.getHoneyBeeFarmer().sendSMS("The date is invalid. Please use the format mm/dd/yyyy. Do not include anything else in the message.\nExample:\n06/22/2021");
+            String prompt = "The date is invalid. Please use the format mm/dd/yyyy. Do not include anything else in the message.\n\nExample:\n06/22/2021";
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
         }
     }
 

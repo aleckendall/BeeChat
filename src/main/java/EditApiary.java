@@ -17,22 +17,25 @@ public class EditApiary extends Sequence {
             endSequence();
             return;
         }
+        setLive(true);
         // ask which apiary to edit.
+        String prompt = "Select an apiary.\nInclude only the number associated with the apiary.\n\nExample: 1\n\nOptions:\n" + conversation.getHoneyBeeFarmer().getApiaryList();
         conversation.getHoneyBeeFarmer()
-                .sendSMS("Select an apiary.\nInclude only the number associated with the apiary.\n\nExample: 1");
-        conversation.getHoneyBeeFarmer()
-                .sendSMS("Options:\n" + conversation.getHoneyBeeFarmer().getApiaryList());
+                .sendSMS(prompt);
+        System.out.println(prompt);
     }
 
     public void endSequence() {
         setExit(true);
-        conversation.addSequence(new MainMenu(conversation));
     }
 
     public void doCurrentMsg() {
         switch(currentMsg) {
             case 0:
                 msg0();
+                break;
+            case 1:
+                msg1();
                 break;
         }
     }
@@ -55,15 +58,16 @@ public class EditApiary extends Sequence {
 
             // decrement response by one since output is formatted from 1 up
             apiaryToEdit = conversation.getHoneyBeeFarmer().getApiaries().get(responseInt - 1);
-            String options = "1. Change name\n2. Change number of hives\n3. Delete apiary";
-            conversation.getHoneyBeeFarmer().sendSMS("What would you like to do to the apiary?\nOptions:\n" + options);
+            String prompt = "What would you like to do to the apiary?\nOptions:\n" + "1. Change name\n2. Change number of hives\n3. Delete apiary";
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
+            System.out.println(prompt);
             currentMsg++;
         } else {
-            conversation.getHoneyBeeFarmer().sendSMS("\"" + response + "\" is not a valid apiary. Include only the number associated with the apiary.\n\nExample: 1");
-            conversation.getHoneyBeeFarmer().sendSMS("Options:\n" + conversation.getHoneyBeeFarmer().getApiaryList());
+            String prompt = "\"" + response + "\" is not a valid apiary. Include only the number associated with the apiary.\n\nExample: 1" + "\n\nOptions:\n" + conversation.getHoneyBeeFarmer().getApiaryList();
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
+            System.out.println(prompt);
         }
     }
-
 
     /*
      * Move to the message that carries out the action the hbf wants to do to the apiary.
@@ -71,16 +75,12 @@ public class EditApiary extends Sequence {
      *      - void
      */
     public void msg1() {
-        Pattern pattern = Pattern.compile("\\d");
+        Pattern pattern = Pattern.compile("^1|2|3$");
         Matcher matcher = pattern.matcher(response);
 
         if(matcher.find()) {
-            int optionSelected = Integer.parseInt(response);
-            if(optionSelected > 3 || optionSelected < 0) {
-                String options = "1. Change name\n2. Change number of hives\n3. Delete apiary";
-                conversation.getHoneyBeeFarmer().sendSMS(optionSelected + " is not a valid option. Please choose from the following options and include only the option in your response." + "\nOptions:\n" + options);
-                return;
-            }
+            Integer optionSelected = Integer.parseInt(matcher.group());
+
             switch(optionSelected) {
                 case 1:
                     conversation.addSequence(new EditApiaryName(conversation, apiaryToEdit));
@@ -92,6 +92,10 @@ public class EditApiary extends Sequence {
                     break;
                 case 3:
                     conversation.getHoneyBeeFarmer().removeApiary(apiaryToEdit);
+                    String prompt = "Apiary has successfully been removed. \n\nReturning to the main menu...";
+                    conversation.getHoneyBeeFarmer().sendSMS(prompt);
+                    System.out.println(prompt);
+                    conversation.addSequence(new MainMenu(conversation));
                     endSequence();
                     break;
                 default:

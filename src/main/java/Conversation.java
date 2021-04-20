@@ -108,7 +108,6 @@ public class Conversation {
                     }
                 } else if (!sequences.peek().getLive()) {
                     sequences.peek().startSequence();
-                    return;
                 } else {
                     sequences.peek().handleResponse("");
                 }

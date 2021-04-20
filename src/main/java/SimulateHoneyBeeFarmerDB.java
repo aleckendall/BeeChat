@@ -1,3 +1,5 @@
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SimulateHoneyBeeFarmerDB {
@@ -5,7 +7,10 @@ public class SimulateHoneyBeeFarmerDB {
     private volatile static SimulateHoneyBeeFarmerDB uniqueInstance;
     private SimulateHoneyBeeFarmerDB(){
         honeyBeeFarmers = new HashMap<>();
-        honeyBeeFarmers.put("+19198306807", new USAHBF("Alec", "Kendall", "+19198306807", "0", null, null));
+        ArrayList<Apiary> apiaries = new ArrayList<>();
+        apiaries.add(new Apiary("Town"));
+        apiaries.add(new Apiary("Farm"));
+        honeyBeeFarmers.put("+18282656263", new USAHBF("James", "Wilkes", "+18282656263", "0", apiaries, null));
     }
 
     public static SimulateHoneyBeeFarmerDB getInstance() {
@@ -36,5 +41,9 @@ public class SimulateHoneyBeeFarmerDB {
 
     public void addHoneyBeeFarmer(HoneyBeeFarmer hbf) {
         this.honeyBeeFarmers.put(hbf.getTelephoneNumber().toString(), hbf);
+    }
+
+    public void removeHoneyBeeFarmer(HoneyBeeFarmer hbf) {
+        this.honeyBeeFarmers.remove(hbf.getTelephoneNumber());
     }
 }

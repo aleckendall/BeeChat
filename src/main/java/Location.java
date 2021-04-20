@@ -4,6 +4,8 @@ public class Location {
     private Double latitude;
     private Double longitude;
 
+    public Location() {}
+
     public Location(String country, Double latitude, Double longitude) {
         this.country = country;
         this.latitude = latitude;

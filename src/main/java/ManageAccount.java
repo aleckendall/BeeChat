@@ -8,16 +8,25 @@ public class ManageAccount extends Sequence {
     }
 
     public void startSequence() {
-        String options = "Select an option:\n1. Update phone number\n3. Update name\n4. Delete account";
+        System.out.println("Begin ManageAccount Sequence");
+        String options = "Select an option:\n1. Update name\n2. Delete account\n\nExample: 1\n\nRespond MAIN to return to the main menu.";
+        System.out.println(options);
         conversation.getHoneyBeeFarmer().sendSMS(options);
         setLive(true);
     }
 
     public void endSequence() {
         setExit(true);
+        System.out.println("End ManageAccount Sequence");
     }
 
     public void doCurrentMsg() {
+
+        if(response.compareTo("MAIN") == 0) {
+            conversation.addSequence(new MainMenu(conversation));
+            endSequence();
+        }
+
         switch(currentMsg) {
             case 0:
                 msg0();
@@ -26,29 +35,26 @@ public class ManageAccount extends Sequence {
     }
 
     public void msg0() {
-        Pattern pattern = Pattern.compile("\\d");
+        Pattern pattern = Pattern.compile("^1|2$");
         Matcher matcher = pattern.matcher(response);
-        String options = "Select an option:\n1. Update phone number\n2. Update name\n3. Delete account";
+        String options = "Select an option:\n1. Update name\n2. Delete account";
 
-        if (matcher.find()) {
-            int option = Integer.parseInt(matcher.group(1));
-            switch(option) {
+        if(matcher.find()) {
+            Integer optionSelected = Integer.parseInt(matcher.group());
+            switch(optionSelected) {
                 case 1:
-                    conversation.addSequence(new EditPhoneNumber(conversation));
+                    conversation.addSequence(new UpdateName(conversation));
                     endSequence();
                     break;
                 case 2:
-                    conversation.addSequence(new EditName(conversation));
-                    endSequence();
-                    break;
-                case 3:
                     conversation.addSequence(new DeleteAccount(conversation));
                     endSequence();
-                default:
-                    conversation.getHoneyBeeFarmer().sendSMS(option + " is not a valid option. Include only the option.\nExample: 1");
-                    conversation.getHoneyBeeFarmer().sendSMS(options);
-                    return;
+                    break;
             }
+        } else {
+            String prompt = "Invalid option selected. Please choose from the following options. Include only the option number in your response.\n\nExample: 1";
+            System.out.println(prompt);
+            conversation.getHoneyBeeFarmer().sendSMS(prompt + "\n\n" + options);
         }
     }
 }
