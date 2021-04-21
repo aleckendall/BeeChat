@@ -9,7 +9,7 @@ public class ManageAccount extends Sequence {
 
     public void startSequence() {
         System.out.println("Begin ManageAccount Sequence\n");
-        String options = "Select an option:\n1. Update name\n2. Delete account\n\nExample:\n1\n\nRespond MAIN to return to the main menu.";
+        String options = "Select an option:\n1. Update name\n2. Delete account\n3. Return to Main Menu\n\nExample:\n1";
         System.out.println(options);
         conversation.getHoneyBeeFarmer().sendSMS(options);
         setLive(true);
@@ -49,6 +49,10 @@ public class ManageAccount extends Sequence {
                     break;
                 case 2:
                     conversation.addSequence(new DeleteAccount(conversation));
+                    endSequence();
+                    break;
+                case 3:
+                    conversation.addSequence(new MainMenu(conversation));
                     endSequence();
                     break;
             }

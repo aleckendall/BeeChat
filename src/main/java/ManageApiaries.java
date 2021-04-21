@@ -11,7 +11,7 @@ public class ManageApiaries extends Sequence {
         setLive(true);
         System.out.println("Begin ManageApiaries Sequence\n");
         String apiaryList = conversation.getHoneyBeeFarmer().getApiaryList();
-        String prompt = "Manage Apiaries\n\nApiaries:\n" + apiaryList + "\nChoose an option:\n1. Add apiary\n2. Edit existing apiary\n\nExample:\n1";
+        String prompt = "Manage Apiaries\n\nApiaries:\n" + apiaryList + "\nChoose an option:\n1. Add apiary\n2. Edit existing apiary\n3. Return to Main Menu\n\nExample:\n1";
         System.out.println(prompt);
         conversation.getHoneyBeeFarmer().sendSMS(prompt);
     }
@@ -31,7 +31,7 @@ public class ManageApiaries extends Sequence {
 
 
     public void msg0() {
-        Pattern pattern = Pattern.compile("^1|2$");
+        Pattern pattern = Pattern.compile("^1|2|3$");
         Matcher matcher = pattern.matcher(response);
         System.out.println("Message 1/1");
 
@@ -42,9 +42,11 @@ public class ManageApiaries extends Sequence {
                 // add an apiary
                 conversation.addSequence(new MainMenu(conversation));
                 conversation.addSequence(new AddApiary(conversation));
-            } else {
+            } else if(optionSelected == 2) {
                 // edit an existing apiary
                 conversation.addSequence(new EditApiary(conversation));
+            } else {
+                conversation.addSequence(new MainMenu(conversation));
             }
             endSequence();
             return;

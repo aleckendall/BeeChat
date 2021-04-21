@@ -19,7 +19,7 @@ public class EditApiary extends Sequence {
         }
         setLive(true);
         // ask which apiary to edit.
-        String prompt = "Choose an apiary:\n" + conversation.getHoneyBeeFarmer().getApiaryList() + "\n\nExample: 1";
+        String prompt = "Choose an apiary:\n" + conversation.getHoneyBeeFarmer().getApiaryList() + "\nExample: 1";
         conversation.getHoneyBeeFarmer()
                 .sendSMS(prompt);
         System.out.println("Begin EditApiary Sequence\n");
@@ -60,7 +60,7 @@ public class EditApiary extends Sequence {
 
             // decrement response by one since output is formatted from 1 up
             apiaryToEdit = conversation.getHoneyBeeFarmer().getApiaries().get(responseInt - 1);
-            String prompt = "What would you like to do to the apiary?\nOptions:\n" + "1. Change name\n2. Change number of hives\n3. Delete apiary\n\nExample:\n3";
+            String prompt = "What would you like to do to the apiary?\n\nOptions:\n" + "1. Change name\n2. Change number of hives\n3. Delete apiary\n4. Return to Main Menu\n\nExample:\n3";
             conversation.getHoneyBeeFarmer().sendSMS(prompt);
             System.out.println(prompt);
             currentMsg++;
@@ -98,6 +98,10 @@ public class EditApiary extends Sequence {
                     String prompt = "Apiary has successfully been removed.\n\nReturning to the main menu...";
                     conversation.getHoneyBeeFarmer().sendSMS(prompt);
                     System.out.println(prompt);
+                    conversation.addSequence(new MainMenu(conversation));
+                    endSequence();
+                    break;
+                case 4:
                     conversation.addSequence(new MainMenu(conversation));
                     endSequence();
                     break;

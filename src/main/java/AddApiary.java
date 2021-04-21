@@ -14,7 +14,10 @@ public class AddApiary extends Sequence {
      * @return void
      */
     public void startSequence() {
-        conversation.getHoneyBeeFarmer().sendSMS("What is the name of your apiary? Only include the name of the apiary.\n\nExample: John's Apiary");
+        System.out.println("Begin AddApiary Sequence\n");
+        String prompt = "What is the name of your apiary? Only include the name of the apiary.\n\nExample: John's Apiary";
+        conversation.getHoneyBeeFarmer().sendSMS(prompt);
+        System.out.println(prompt);
         this.setLive(true);
     }
 
@@ -73,10 +76,14 @@ public class AddApiary extends Sequence {
                 }
             }
             this.apiary.setName(response);
-            conversation.getHoneyBeeFarmer().sendSMS("What is the latitude of your apiary?\n\nExample: 89.9\n\nIf you do not know, respond SKIP.");
+            String prompt = "What is the latitude of your apiary?\n\nExample: 89.9\n\nIf you do not know, respond SKIP.";
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
+            System.out.println(prompt);
             currentMsg++;
         } else {
-            conversation.getHoneyBeeFarmer().sendSMS("Sorry but the apiary name must consist of at least one character or number");
+            String prompt = "Sorry but the apiary name must consist of at least one character or number";
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
+            System.out.println(prompt);
         }
     }
 
@@ -90,23 +97,38 @@ public class AddApiary extends Sequence {
      *      - void
      */
     public void message1() {
-        Pattern pattern = Pattern.compile("[-]*[\\d]+.[\\d]+");
+        Pattern pattern = Pattern.compile("\\d");
         Matcher matcher = pattern.matcher(response);
         Pattern patternSkip = Pattern.compile("^SKIP$");
         Matcher matcherSkip = patternSkip.matcher(response);
 
-        if(matcher.matches()) {
+        if(matcher.find()) {
             Location location = apiary.getLocation();
-            location.setLatitude(Double.parseDouble(response));
+            if(location == null) {
+                location = new Location();
+            }
+            Double latitude = Double.parseDouble(matcher.group());
+            if (latitude < -90 || latitude > 90) {
+                String prompt = "The latitude is invalid. Only include the latitude.\n\nExample: 89.45\n\nIf you do not know, respond SKIP.";
+                System.out.println(prompt);
+                conversation.getHoneyBeeFarmer().sendSMS(prompt);
+                return;
+            }
+            location.setLatitude(latitude);
             apiary.setLocation(location);
-            conversation.getHoneyBeeFarmer().sendSMS("The latitude of the apiary has been recorded.");
+            String prompt = "The latitude of the apiary has been recorded." + "\n\nWhat is the longitude of the apiary? Include only the longitude.\n\nExample:\n49.9\n\nIf you do not know, respond SKIP.";
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
+            System.out.println(prompt);
             currentMsg++;
-        } else if(matcherSkip.matches()) {
-            conversation.getHoneyBeeFarmer().sendSMS("Latitude skipped.");
-            conversation.getHoneyBeeFarmer().sendSMS("What is the longitude of the apiary? Only include the longitude.\n\nExample: 49.9\n\nIf you do not know, respond SKIP.");
+        } else if(matcherSkip.find()) {
+            String prompt = "Latitude skipped." + "\n\nWhat is the longitude of the apiary? Only include the longitude.\n\nExample: 49.9\n\nIf you do not know, respond SKIP.";
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
+            System.out.println(prompt);
             currentMsg++;
         } else {
-            conversation.getHoneyBeeFarmer().sendSMS("The latitude is invalid. Only include the latitude.\n\nExample: 89.45\n\nIf you do not know, respond SKIP.");
+            String prompt = "The latitude is invalid. Only include the latitude.\n\nExample: 89.45\n\nIf you do not know, respond SKIP.";
+            System.out.println(prompt);
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
         }
     }
 
@@ -120,24 +142,37 @@ public class AddApiary extends Sequence {
      *      - void
      */
     public void message2() {
-        Pattern pattern = Pattern.compile("[-]*[\\d]+.[\\d]+");
+        Pattern pattern = Pattern.compile("\\d");
         Matcher matcher = pattern.matcher(response);
         Pattern patternSkip = Pattern.compile("^SKIP$");
         Matcher matcherSkip = patternSkip.matcher(response);
 
-        if(matcher.matches()) {
+        if(matcher.find()) {
             Location location = apiary.getLocation();
-            location.setLongitude(Double.parseDouble(response));
-            apiary.setLocation(location);
-            conversation.getHoneyBeeFarmer().sendSMS("The longitude for the apiary has been recorded.");
-            conversation.getHoneyBeeFarmer().sendSMS("How many hives does the apiary have? Only include the number of hive(s).\n\nExample: 5");
+            if(location == null) {
+                location = new Location();
+            }
+            Double longitude = Double.parseDouble(matcher.group());
+            if (longitude < -180 || longitude > 180) {
+                String prompt = "The longitude is invalid. Only include the longitude.\n\nExample: 89.45\n\nIf you do not know, respond SKIP.";
+                System.out.println(prompt);
+                conversation.getHoneyBeeFarmer().sendSMS(prompt);
+                return;
+            }
+            location.setLatitude(longitude);
+            String prompt = "The longitude for the apiary has been recorded." + "\n\nHow many hives does the apiary have? Only include the number of hive(s).\n\nExample: 5";
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
+            System.out.println(prompt);
             currentMsg++;
-        } else if(matcherSkip.matches()) {
-            conversation.getHoneyBeeFarmer().sendSMS("Longitude skipped.");
-            conversation.getHoneyBeeFarmer().sendSMS("How many hives does the apiary have? Only include the number of hive(s).\n\nExample: 5");
+        } else if(matcherSkip.find()) {
+            String prompt = "Longitude skipped." + "\n\nHow many hives does the apiary have? Only include the number of hive(s).\n\nExample: 5";
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
+            System.out.println(prompt);
             currentMsg++;
         } else {
-            conversation.getHoneyBeeFarmer().sendSMS("The longitude is invalid. Only include the longitude.\n\nExample: -77.0364\n\nIf you do not know, respond SKIP.");
+            String prompt = "The longitude is invalid. Only include the longitude.\n\nExample: -77.0364\n\nIf you do not know, respond SKIP.";
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
+            System.out.println(prompt);
         }
     }
 
@@ -158,10 +193,14 @@ public class AddApiary extends Sequence {
             Integer hiveCount = Integer.parseInt(matcher.group());
             apiary.setHiveCount(hiveCount);
             conversation.getHoneyBeeFarmer().addApiary(apiary);
-            conversation.getHoneyBeeFarmer().sendSMS("The number of hives at the apiary has been recorded!");
+            String prompt = "The number of hives at the apiary has been recorded!";
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
+            System.out.println(prompt);
             endSequence();
         } else {
-            conversation.getHoneyBeeFarmer().sendSMS("The response was not able to be validated. Only include the number of hive(s).\n\nExample: 5");
+            String prompt = "The response was not able to be validated. Only include the number of hive(s).\n\nExample: 5";
+            System.out.println(prompt);
+            conversation.getHoneyBeeFarmer().sendSMS(prompt);
         }
     }
 }

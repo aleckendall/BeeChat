@@ -10,7 +10,7 @@ public class DeleteAccount extends Sequence {
     public void startSequence() {
         setLive(true);
         System.out.println("Begin DeleteAccount Sequence\n");
-        String prompt = "Are you sure you want to delete your account? This action will not be able to be undone. Respond Y for yes or N for no.\n\nExample: N";
+        String prompt = "Are you sure you want to delete your account? This action can not be undone. Respond Y for yes or N for no.\n\nExample:\nN";
         conversation.getHoneyBeeFarmer().sendSMS(prompt);
         System.out.println(prompt);
     }

@@ -55,7 +55,7 @@ public class MainMenu extends Sequence {
             endSequence();
             return;
         }
-        String prompt = "Sorry but your response is not valid.\nPlease choose from the following options:\n1. Record a visit\n2. Manage apiaries\n3. Manage account\n\nExample:\n1";
+        String prompt = "Sorry, but your response is not valid.\nPlease choose from the following options:\n1. Record a visit\n2. Manage apiaries\n3. Manage account\n\nExample:\n1";
         System.out.println(prompt);
         conversation.getHoneyBeeFarmer().sendSMS(prompt);
     }
