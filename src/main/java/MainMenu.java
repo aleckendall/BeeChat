@@ -9,7 +9,7 @@ public class MainMenu extends Sequence {
 
     public void startSequence() {
         System.out.println("Begin MainMenu Sequence\n");
-        String prompt = "Main Menu\nPlease select an option:\n1. Record a visit\n2. Manage apiaries\n3. Manage account\n\nExample:\n2";
+        String prompt = "Main Menu\nPlease select an option:\n1. Manage visits\n2. Manage apiaries\n3. Manage account\n\nExample:\n2";
         System.out.println(prompt);
         conversation.getHoneyBeeFarmer().sendSMS(prompt);
         this.setLive(true);
@@ -37,7 +37,7 @@ public class MainMenu extends Sequence {
         Matcher matcher = pattern1.matcher(response);
         if(matcher.find()) {
             // record a visit
-            conversation.addSequence(new RecordVisit(conversation));
+            conversation.addSequence(new ManageVisits(conversation));
             endSequence();
             return;
         }
