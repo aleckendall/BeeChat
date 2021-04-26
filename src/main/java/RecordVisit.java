@@ -1,6 +1,7 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -87,19 +88,20 @@ public class RecordVisit extends Sequence {
                 );
             }
             currentMsg++;
-            String prompt = "What is the date of the visit?\n\nFormat: mm/dd/yyyy\n\nExample:\n12/21/2021";
+            String prompt = "What is the date of the visit?\n\nFormat: mm/dd/yyyy hh:mm \n\nExample:\n12/21/2021 16:40";
             conversation.getHoneyBeeFarmer().sendSMS(prompt);
             System.out.println(prompt);
         }
     }
 
     public void msg1() throws ParseException {
-        Pattern pattern = Pattern.compile("^(0[1-9]|1[012])\\/(0[1-9]|[12][0-9]|3[01])\\/(19|20)\\d\\d$");
+        Pattern pattern = Pattern.compile("^(0[1-9]|1[012])\\/(0[1-9]|[12][0-9]|3[01])\\/(19|20)\\d\\d\\s([0-1][1-9]|2[0-3]):([0-5][0-9])$");
         Matcher matcher = pattern.matcher(response);
         System.out.println("Message 2/2");
 
         if(matcher.matches()) {
-            Date visitDate = new SimpleDateFormat("MM/dd/yyyy").parse(response);
+            SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+            Date visitDate = df.parse(response);
             for(Apiary apiary : visited) {
                 if(apiary.getVisits() == null) {
                     ArrayList<Visit> visits = new ArrayList<>();
@@ -109,12 +111,13 @@ public class RecordVisit extends Sequence {
                     apiary.getVisits().add(new Visit(visitDate));
                 }
             }
-            String prompt = "Your visit(s) have been recorded.\n\nReturning to the main menu...";
+            String prompt = "Your visit has successfully been recorded!\n\n" +
+                    "Returning you to the main menu!";
             conversation.getHoneyBeeFarmer().sendSMS(prompt);
             System.out.println(prompt);
             this.endSequence();
         } else {
-            String prompt = "The date is invalid. Please use the format mm/dd/yyyy. Do not include anything else in the message.\n\nExample:\n06/22/2021";
+            String prompt = "The date is invalid. Please use the format mm/dd/yyyy hh:mm. Do not include anything else in the message.\n\nExample:\n06/22/2021 09:30";
             conversation.getHoneyBeeFarmer().sendSMS(prompt);
             System.out.println(prompt);
         }
