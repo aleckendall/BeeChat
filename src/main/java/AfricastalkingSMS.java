@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Stack;
 
 public class AfricastalkingSMS implements SmsSendBehavior, SmsRetrievalBehavior {
-    private final String username = "HiveTracks";
-    private final String apiKey = "2380d5d7221599abc834ce907425f19a2374a3e36dcfaeddb19965347a1da003";
-    private final String shortCode = "28161";
+    private final String username = "";
+    private final String apiKey = "";
+    private final String shortCode = "";
     private long lastReceivedId = 0;
     private ZonedDateTime lastReceived = ZonedDateTime.now();
     private SmsService sms;
