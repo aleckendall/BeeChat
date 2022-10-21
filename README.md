@@ -4,4 +4,4 @@ poor network connectivity to effectively update their apiary management informat
 
 The code is not unit-tested, as the primary goal was creating a functional, working prototype.
 
-For an overview of the architecture, please see BeeTalk.png.
+For an overview of the architecture, please see BeeTalk.png which can be found in the root directory.
