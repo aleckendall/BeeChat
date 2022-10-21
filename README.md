@@ -3,3 +3,5 @@ about their apiaries via text messaging. The motivation behind using text messag
 poor network connectivity to effectively update their apiary management information in real-time.
 
 The code is not unit-tested, as the primary goal was creating a functional, working prototype.
+
+For an overview of the architecture, please see BeeTalk.png.
