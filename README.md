@@ -1,5 +1,5 @@
 This a proof of concept created during my senior year of university. The purpose of the application is to allow honeybee farmers to manage information
-about their apiaries via text messaging. The motivation behind using text messaging is that it allows honeybee farmers to update their apiary information in real-time, onsite (at their apiaries) with only cellular connectivity.
+about their apiaries via text messaging. The motivation behind using text messaging is that it allows honeybee farmers to update their apiary information in real-time, onsite (at their apiaries) when the only over-the-air connectivity is narrowband cellular connectivity.
 
 The code is not unit-tested, as the primary goal was creating a functional, working prototype.
 
